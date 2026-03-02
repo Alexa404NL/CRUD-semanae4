@@ -137,59 +137,86 @@ class App extends React.Component {
 	render() {
 		return (
 			<>
-				<Container>
-					<br />
-					<Button color="success" onClick={() => this.mostrarModalInsertar()}>
-						Crear
-					</Button>
-					<br />
-					<br />
-					<Table>
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Nombre</th>
-								<th>serie</th>
-								<th>Mail</th>
-								<th>Fecha</th>
-								<th>Color</th>
-								<th>Acción</th>
-							</tr>
-						</thead>
-						<tbody>
+				<Container fluid className="app-container">
+					<div className="header-section">
+						<h1 className="app-title">👥 Gestor de Usuarios</h1>
+						<Button 
+							color="success" 
+							className="btn-crear" 
+							onClick={() => this.mostrarModalInsertar()}
+						>
+							✨ Crear Nuevo
+						</Button>
+					</div>
+
+					<div className="table-wrapper">
+						<Table striped hover className="usuarios-table">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>👤 Nombre</th>
+									<th>📺 Serie</th>
+									<th>📧 Email</th>
+									<th>📅 Fecha</th>
+									<th>🎨 Color</th>
+									<th>❤️ Estado</th>
+									<th>⚙️ Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
 							{this.state.data.map((dato) => (
-								<tr key={dato.id}>
-									<td>{dato.id}</td>
-									<td>{dato.nombre}</td>
-									<td>{dato.serie}</td>
-									<td>{dato.mail}</td>
-									<td>{dato.fecha}</td>
-									<td>{dato.color}</td>
-									<td>
+								<tr key={dato.id} className="table-row-custom">
+									<td className="id-cell"><strong>{dato.id}</strong></td>
+									<td className="nombre-cell">{dato.nombre}</td>
+									<td className="serie-cell">{dato.serie}</td>
+									<td className="mail-cell">
+										<a href={`mailto:${dato.mail}`}>{dato.mail}</a>
+									</td>
+									<td className="fecha-cell">{dato.fecha}</td>
+									<td className="color-cell">
+										<div
+											className="color-swatch"
+											style={{
+												backgroundColor: dato.color,
+											}}
+											title={dato.color}
+										/>
+									</td>
+									<td className="alive-cell">
+										<span className={`alive-badge ${dato.alive ? "alive" : "dead"}`}>
+											{dato.alive ? "✅ Vivo" : "❌ Muerto"}
+										</span>
+									</td>
+									<td className="action-cell">
 										<Button
 											color="primary"
+											size="sm"
+											className="btn-action"
 											onClick={() => this.mostrarModalActualizar(dato)}>
-											Editar
-										</Button>{" "}
-										<Button color="danger" onClick={() => this.eliminar(dato)}>
-											Eliminar
+											✏️ Editar
+										</Button>
+										<Button 
+											color="danger" 
+											size="sm"
+											className="btn-action"
+											onClick={() => this.eliminar(dato)}>
+											🗑️ Eliminar
 										</Button>
 									</td>
 								</tr>
 							))}
 						</tbody>
 					</Table>
-				</Container>
+				</div>
+			</Container>
 
-				<Modal isOpen={this.state.modalActualizar}>
-					<ModalHeader>
-						<div>
-							<h3>Editar Registro</h3>
-						</div>
+				<Modal isOpen={this.state.modalActualizar} className="custom-modal">
+					<ModalHeader className="modal-header-custom">
+						<h3>✏️ Editar Registro</h3>
 					</ModalHeader>
 					<ModalBody>
 						<FormGroup>
-							<label> Id:</label>
+							<label>🆔 ID</label>
 							<input
 								className="form-control"
 								readOnly
@@ -198,37 +225,40 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Nombre:</label>
+							<label>👤 Nombre</label>
 							<input
 								className="form-control"
 								name="nombre"
 								type="text"
 								onChange={this.handleChange}
 								value={this.state.form.nombre}
+								placeholder="Ingresa el nombre completo"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>serie:</label>
+							<label>📺 Serie</label>
 							<input
 								className="form-control"
 								name="serie"
 								type="text"
 								onChange={this.handleChange}
 								value={this.state.form.serie}
+								placeholder="¿De qué serie proviene?"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Mail:</label>
+							<label>✉️ Email</label>
 							<input
 								className="form-control"
 								name="mail"
 								type="email"
 								onChange={this.handleChange}
 								value={this.state.form.mail}
+								placeholder="correo@ejemplo.com"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Fecha:</label>
+							<label>📅 Fecha</label>
 							<input
 								className="form-control"
 								name="fecha"
@@ -238,46 +268,50 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Color:</label>
-							<input
-								className="form-control"
-								name="color"
-								type="color"
-								onChange={this.handleChange}
-								value={this.state.form.color}
-							/>
+							<label>🎨 Color Favorito</label>
+							<div className="color-picker-wrapper">
+								<input
+									className="color-input"
+									name="color"
+									type="color"
+									onChange={this.handleChange}
+									value={this.state.form.color}
+								/>
+								<span className="color-value">{this.state.form.color}</span>
+							</div>
 						</FormGroup>
-						<FormGroup>
-							<label>Alive:</label>
-							<input
-								name="alive"
-								type="checkbox"
-								onChange={this.handleChange}
-								checked={this.state.form.alive}
-							/>
+						<FormGroup check>
+							<label>
+								<input
+									name="alive"
+									type="checkbox"
+									onChange={this.handleChange}
+									checked={this.state.form.alive}
+									className="form-check-input"
+								/>
+								<span className="form-check-label">💚 ¿Está vivo?</span>
+							</label>
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
 						<Button
 							color="primary"
 							onClick={() => this.editar(this.state.form)}>
-							Editar
+							✅ Guardar Cambios
 						</Button>
-						<Button color="danger" onClick={() => this.cerrarModalActualizar()}>
-							Cancelar
+						<Button color="secondary" onClick={() => this.cerrarModalActualizar()}>
+							❌ Cancelar
 						</Button>
 					</ModalFooter>
 				</Modal>
 
-				<Modal isOpen={this.state.modalInsertar}>
-					<ModalHeader>
-						<div>
-							<h3>Insertar nombre</h3>
-						</div>
+				<Modal isOpen={this.state.modalInsertar} className="custom-modal">
+					<ModalHeader className="modal-header-custom">
+						<h3>✨ Crear Nuevo Usuario</h3>
 					</ModalHeader>
 					<ModalBody>
 						<FormGroup>
-							<label>Id: </label>
+							<label>🆔 ID</label>
 							<input
 								className="form-control"
 								readOnly
@@ -286,34 +320,37 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Nombre: </label>
+							<label>👤 Nombre</label>
 							<input
 								className="form-control"
 								name="nombre"
 								type="text"
 								onChange={this.handleChange}
+								placeholder="Ingresa el nombre completo"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>serie: </label>
+							<label>📺 Serie</label>
 							<input
 								className="form-control"
 								name="serie"
 								type="text"
 								onChange={this.handleChange}
+								placeholder="¿De qué serie proviene?"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Mail: </label>
+							<label>✉️ Email</label>
 							<input
 								className="form-control"
 								name="mail"
 								type="email"
 								onChange={this.handleChange}
+								placeholder="correo@ejemplo.com"
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Fecha: </label>
+							<label>📅 Fecha</label>
 							<input
 								className="form-control"
 								name="fecha"
@@ -322,31 +359,36 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Color: </label>
-							<input
-								className="form-control"
-								name="color"
-								type="color"
-								onChange={this.handleChange}
-							/>
+							<label>🎨 Color Favorito</label>
+							<div className="color-picker-wrapper">
+								<input
+									className="color-input"
+									name="color"
+									type="color"
+									onChange={this.handleChange}
+									defaultValue="#000000"
+								/>
+								<span className="color-value">{this.state.form.color}</span>
+							</div>
 						</FormGroup>
-						<FormGroup>
-							<label>Alive: </label>
-							<input
-								name="alive"
-								type="checkbox"
-								onChange={this.handleChange}
-							/>
+						<FormGroup check>
+							<label>
+								<input
+									name="alive"
+									type="checkbox"
+									onChange={this.handleChange}
+									className="form-check-input"
+								/>
+								<span className="form-check-label">💚 ¿Está vivo?</span>
+							</label>
 						</FormGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button color="primary" onClick={() => this.insertar()}>
-							Insertar{" "}
+						<Button color="success" onClick={() => this.insertar()}>
+							✅ Crear Usuario
 						</Button>
-						<Button
-							className="btn btn-danger"
-							onClick={() => this.cerrarModalInsertar()}>
-							Cancelar
+						<Button color="secondary" onClick={() => this.cerrarModalInsertar()}>
+							❌ Cancelar
 						</Button>
 					</ModalFooter>
 				</Modal>
