@@ -12,16 +12,41 @@ import {
 	ModalFooter,
 } from "reactstrap";
 
+
 const data = [
-	{ id: 1, nombre: "Jorge Carranza", empresa: "Tec" },
-	{ id: 2, nombre: "Ramon Velez", empresa: "Banorte" },
-	{ id: 3, nombre: "Hugo Sanchez ", empresa: "Real Madrid" },
-	{ id: 4, nombre: "Rafael Marquez", empresa: "Barcelona" },
-	{ id: 5, nombre: "Carlos Alcaraz", empresa: "Mallorca" },
-	{ id: 6, nombre: "N Djokovic", empresa: "Serbia" },
-	{ id: 7, nombre: "Sergio Perez", empresa: "Cadillac" },
-	{ id: 8, nombre: "Max Verstapen", empresa: "Oracle Red Bull Racing" },
-	{ id: 9, nombre: "Carlos Sainz", empresa: "Williams Racing" },
+	{
+		id: 1,
+		nombre: "pikmin 1",
+		serie: "me and the pikmins",
+		alive: true,
+		mail: "pikmin1@example.com",
+		fecha: "2023-01-01",
+		color: "#ff0000",
+	},
+	{
+		id: 2,
+		nombre: "bert",
+		serie: "plaza sesamo",
+		alive: true,
+		mail: "bert@example.com",
+		fecha: "2023-02-02",
+		color: "#00ff00",
+	},
+	{
+		id: 3,
+		nombre: "ernie",
+		serie: "plaza sesamo",
+		alive: true,
+		mail: "ernie@example.com",
+		fecha: "2023-03-03",
+		color: "#0000ff",
+	},
+	{ id: 4, nombre: "alex", serie: "yo", alive: true, mail: "alex@example.com", fecha: "2023-04-04", color: "#aaaaaa" },
+	{ id: 5, nombre: "elliot", serie: "stardew", alive: true, mail: "elliot@example.com", fecha: "2023-05-05", color: "#ff8800" },
+	{ id: 6, nombre: "harvey", serie: "stardew", alive: true, mail: "harvey@example.com", fecha: "2023-06-06", color: "#88ff00" },
+	{ id: 7, nombre: "luciel", serie: "messangers", alive: true, mail: "luciel@example.com", fecha: "2023-07-07", color: "#0088ff" },
+	{ id: 8, nombre: "viktor", serie: "on the ice", alive: true, mail: "viktor@example.com", fecha: "2023-08-08", color: "#880088" },
+	{ id: 9, nombre: "illya", serie: "a rivalry", alive: true, mail: "illya@example.com", fecha: "2023-09-09", color: "#00aaaa" },
 ];
 
 class App extends React.Component {
@@ -32,9 +57,14 @@ class App extends React.Component {
 		form: {
 			id: "",
 			nombre: "",
-			empresa: "",
+			serie: "",
+			mail: "",
+			fecha: "",
+			color: "#000000",
+			alive: false,
 		},
 	};
+
 	mostrarModalActualizar = (dato) => {
 		this.setState({
 			form: dato,
@@ -62,12 +92,17 @@ class App extends React.Component {
 		arreglo.map((registro) => {
 			if (dato.id === registro.id) {
 				arreglo[contador].nombre = dato.nombre;
-				arreglo[contador].empresa = dato.empresa;
+				arreglo[contador].serie = dato.serie;
+                arreglo[contador].alive = dato.alive;
+                arreglo[contador].mail = dato.mail;
+                arreglo[contador].fecha = dato.fecha;
+                arreglo[contador].color = dato.color;
 			}
 			contador++;
 		});
 		this.setState({ data: arreglo, modalActualizar: false });
 	};
+
 	eliminar = (dato) => {
 		var opcion = window.confirm(
 			"Estás Seguro que deseas Eliminar el elemento " + dato.id,
@@ -91,9 +126,11 @@ class App extends React.Component {
 		lista.push(valorNuevo);
 		this.setState({ modalInsertar: false, data: lista });
 	};
+
 	handleChange = (e) => {
+		const { name, type, value, checked } = e.target;
 		this.setState({
-			form: { ...this.state.form, [e.target.name]: e.target.value },
+			form: { ...this.state.form, [name]: type === "checkbox" ? checked : value },
 		});
 	};
 
@@ -112,7 +149,10 @@ class App extends React.Component {
 							<tr>
 								<th>ID</th>
 								<th>Nombre</th>
-								<th>Empresa</th>
+								<th>serie</th>
+								<th>Mail</th>
+								<th>Fecha</th>
+								<th>Color</th>
 								<th>Acción</th>
 							</tr>
 						</thead>
@@ -121,7 +161,10 @@ class App extends React.Component {
 								<tr key={dato.id}>
 									<td>{dato.id}</td>
 									<td>{dato.nombre}</td>
-									<td>{dato.empresa}</td>
+									<td>{dato.serie}</td>
+									<td>{dato.mail}</td>
+									<td>{dato.fecha}</td>
+									<td>{dato.color}</td>
 									<td>
 										<Button
 											color="primary"
@@ -165,13 +208,52 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Empresa:</label>
+							<label>serie:</label>
 							<input
 								className="form-control"
-								name="empresa"
+								name="serie"
 								type="text"
 								onChange={this.handleChange}
-								value={this.state.form.empresa}
+								value={this.state.form.serie}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Mail:</label>
+							<input
+								className="form-control"
+								name="mail"
+								type="email"
+								onChange={this.handleChange}
+								value={this.state.form.mail}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Fecha:</label>
+							<input
+								className="form-control"
+								name="fecha"
+								type="date"
+								onChange={this.handleChange}
+								value={this.state.form.fecha}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Color:</label>
+							<input
+								className="form-control"
+								name="color"
+								type="color"
+								onChange={this.handleChange}
+								value={this.state.form.color}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Alive:</label>
+							<input
+								name="alive"
+								type="checkbox"
+								onChange={this.handleChange}
+								checked={this.state.form.alive}
 							/>
 						</FormGroup>
 					</ModalBody>
@@ -213,11 +295,46 @@ class App extends React.Component {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<label>Empresa: </label>
+							<label>serie: </label>
 							<input
 								className="form-control"
-								name="empresa"
+								name="serie"
 								type="text"
+								onChange={this.handleChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Mail: </label>
+							<input
+								className="form-control"
+								name="mail"
+								type="email"
+								onChange={this.handleChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Fecha: </label>
+							<input
+								className="form-control"
+								name="fecha"
+								type="date"
+								onChange={this.handleChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Color: </label>
+							<input
+								className="form-control"
+								name="color"
+								type="color"
+								onChange={this.handleChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<label>Alive: </label>
+							<input
+								name="alive"
+								type="checkbox"
 								onChange={this.handleChange}
 							/>
 						</FormGroup>
